@@ -1,3 +1,4 @@
+--查询天津人民出版社全部的图书信息
 CREATE VIEW query_tianjin_allBook 
 AS
 	SELECT Bname,Bauthor,Bprice,Bamount
@@ -9,6 +10,7 @@ AS
 WITH CHECK OPTION;
 GO
 
+--查询所有价格大于20元的图书
 CREATE VIEW query_price_more20
 AS
 	SELECT Bname,Bauthor,Bprice,Bamount
@@ -17,6 +19,7 @@ AS
 WITH CHECK OPTION;
 GO
 
+--查询包含所有女员工借阅的图书
 CREATE VIEW query_girl_book
 AS
 	SELECT Bname,Bauthor,Bprice,Bamount
@@ -33,6 +36,7 @@ AS
 WITH CHECK OPTION;
 GO
 
+--查询借阅图书超过三本的员工
 CREATE VIEW query_brrow_more3 
 AS
 SELECT Ename,Esex,Ebirthday
@@ -45,16 +49,14 @@ WHERE Eid IN(
 )
 WITH CHECK OPTION;
 GO
-
-CREATE VIEW query_brrow_amount
+--查询未被借阅的图书
+CREATE VIEW query_unbrrow_book
 AS 
-SELECT D.Dname ,count(Brrow.Bid)
-FROM Department D,Brrow
-WHERE Did in(
-	SELECT Did
-	FROM Employment
-	WHERE Eid = Brrow.Eid
-	GROUP BY Did
+SELECT Bname,Bauthor,Bprice,Bamount
+FROM Book
+WHERE Bid NOT IN(
+	SELECT DISTINCT Bid 
+	From Brrow
 )
 WITH CHECK OPTION;
 
