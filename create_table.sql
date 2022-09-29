@@ -1,9 +1,11 @@
+use Book_Manage;
 CREATE TABLE Book(
 	Bid int PRIMARY KEY NOT NULL IDENTITY,
 	Bname varchar(30),
 	Bauthor varchar(30),
 	Bprice decimal(6,2),
 	Bamount int,
+	BRamount int,
 	Pid int
 );
 

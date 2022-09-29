@@ -49,7 +49,7 @@ GO
 --查询所有已过期未收回的图书
 CREATE PROC Pfind_overdue_book
 AS
-	SELECT Bname,Bauthor,Bprice,Bamount,COUNT(Bid) AS brrow_book_amount
+	SELECT Bname,Bauthor,Bprice
 	FROM Book
 	WHERE Bid in(
 		SELECT Bid 
@@ -67,7 +67,7 @@ AS
 	WHERE Pid =(
 		SELECT Pid
 		FROM Press
-		WHERE Dname = @name
+		WHERE Pname = @name
 	)
 
 
