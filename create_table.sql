@@ -15,7 +15,6 @@ CREATE  TABLE Press(
 	Padress varchar(50),
 	Ptel varchar(20),
 	Pcontact varchar(20),
-	Bid int,
 );
 
 ALTER TABLE Book ADD FOREIGN KEY(Pid) REFERENCES Press(Pid);

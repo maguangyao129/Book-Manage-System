@@ -69,6 +69,34 @@ AS
 		FROM Press
 		WHERE Pname = @name
 	)
+GO
+--查看加密后的出版社数据
+CREATE PROC Pcheck_Press
+AS
+	select * 
+, DEtel = CONVERT(CHAR(11),DECRYPTBYASYMKEY(ASYMKEY_ID('asym_key_client'),PEtel,N'abcd1234@'))
+from Press;
+GO
 
+--为加密后的出版社添加数据
+CREATE PROC Pinsert_Press
+	@name varchar(20),
+	@adress varchar(50),
+	@tel varchar(15),
+	@contact varchar(10)
+AS
+	Insert INTO Press (Pname,Padress,PEtel,Pcontact)
+	VALUES(@name,@adress,ENCRYPTBYASYMKEY( ASYMKEY_ID('asym_key_client'),@tel),@contact)
+GO
 
+--为加密后的出版社修改电话号码
+CREATE PROC Pupdate_Press
+	@name varchar(20),
+	@newtel varchar(15)
+AS
+	UPDATE Press
+	SET PEtel = ENCRYPTBYASYMKEY( ASYMKEY_ID('AsymKey_TestDb'), @newtel)
+GO
+	
+	
 
