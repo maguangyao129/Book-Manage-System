@@ -73,9 +73,9 @@ GO
 --查看加密后的出版社数据
 CREATE PROC Pcheck_Press
 AS
-	select * 
-, DEtel = CONVERT(CHAR(11),DECRYPTBYASYMKEY(ASYMKEY_ID('asym_key_client'),PEtel,N'abcd1234@'))
-from Press;
+	SELECT Pname,Padress,Pcontact,
+	DEtel = CONVERT(CHAR(11),DECRYPTBYASYMKEY(ASYMKEY_ID('asym_key_client'),PEtel,N'abcd1234@'))
+	FROM Press;
 GO
 
 --为加密后的出版社添加数据
@@ -85,7 +85,7 @@ CREATE PROC Pinsert_Press
 	@tel varchar(15),
 	@contact varchar(10)
 AS
-	Insert INTO Press (Pname,Padress,PEtel,Pcontact)
+	INSERT INTO Press (Pname,Padress,PEtel,Pcontact)
 	VALUES(@name,@adress,ENCRYPTBYASYMKEY( ASYMKEY_ID('asym_key_client'),@tel),@contact)
 GO
 

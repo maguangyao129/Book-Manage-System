@@ -1,4 +1,10 @@
-
+--添加借阅信息前的检查触发器
+IF EXISTS(
+  SELECT * from sysobjects 
+	WHERE xtype = 'TR' 
+	AND NAME =  'trigger_broow_check')
+	DROP TRIGGER trigger_broow_check
+GO
 CREATE TRIGGER trigger_broow_check
 ON Brrow
 INSTEAD OF INSERT
@@ -12,7 +18,7 @@ Begin
 	IF NOT exists(SELECT * FROM Employment WHERE Eid = @newEid)
 		BEGIN
 			print('此用户不存在!!!')
-			rollback transaction
+			ROLLBACK TRANSACTION
 		END
 	ELSE
 	BEGIN
@@ -21,7 +27,7 @@ Begin
 		IF(@remain <= 0)
 			BEGIN
 				print('您要借阅的书籍内存为空')
-				rollback transaction
+				ROLLBACK TRANSACTION
 			END
 		ELSE
 			BEGIN
@@ -33,6 +39,13 @@ Begin
 END
 GO
 
+--删除借阅信息后释放触发器
+IF EXISTS(
+  SELECT * from sysobjects 
+	WHERE xtype = 'TR' 
+	AND NAME =  'trigger_brrow_delecte')
+	DROP TRIGGER trigger_brrow_delecte
+GO
 CREATE TRIGGER trigger_brrow_delecte
 ON Brrow
 AFTER DELETE
@@ -47,6 +60,13 @@ BEGIN
 END
 GO
 
+--员工删除前借阅信息检查触发器
+IF EXISTS(
+  SELECT * from sysobjects 
+	WHERE xtype = 'TR' 
+	AND NAME =  'trigger_employment_check')
+	DROP TRIGGER trigger_employment_check
+GO
 CREATE TRIGGER trigger_employment_check
 ON Employment
 INSTEAD OF DELETE
@@ -60,6 +80,13 @@ BEGIN
 END
 GO
 
+--书籍删除前借阅信息检查触发器
+IF EXISTS(
+  SELECT * from sysobjects 
+	WHERE xtype = 'TR' 
+	AND NAME =  'trigger_book_delete')
+	DROP TRIGGER trigger_book_delete
+GO
 CREATE TRIGGER trigger_book_delete
 ON Book
 INSTEAD OF DELETE
@@ -73,6 +100,13 @@ BEGIN
 END
 GO
 
+--书籍库存更新检查触发器
+IF EXISTS(
+  SELECT * from sysobjects 
+	WHERE xtype = 'TR' 
+	AND NAME =  'trigger_book_update')
+	DROP TRIGGER trigger_book_update
+GO
 CREATE TRIGGER trigger_book_update
 On Book
 INSTEAD OF UPDATE
@@ -90,6 +124,7 @@ BEGIN
 	if(@amount + @remain_amount > @new_amount)
 		BEGIN
 			print('本次修改不合法，小于原始库存')
+			ROLLBACK TRANSACTION
 		END
 	ELSE
 		BEGIN
@@ -99,4 +134,6 @@ BEGIN
 		END
 
 END
+
+
 
